@@ -4,7 +4,9 @@ from tkinter.simpledialog import askstring
 
 root = Tk()
 
-WIDTH = 2000
+WIDTH = 1000
+
+HEIGHT = WIDTH
 
 FPS = 60
 
@@ -22,11 +24,7 @@ root.geometry("500x500")
 
 root.withdraw()
 
-board = pg.image.load("Dart Board.png")
-
-board = pg.transform.scale(board, (1800,1800))
-
-screen.blit(board, (WIDTH/2, WIDTH/2))
+BLACK = (0, 0, 0)
 
 pg.display.update()
 
@@ -55,4 +53,20 @@ def give_points(points):
 while running == True:
 
     clock.tick(FPS)
+    
+    board = pg.image.load("Dart Board.png")
+
+    board = pg.transform.scale(board, (750,750))
+
+    screen.fill(BLACK)
+
+    screen.blit(board, (0, 0))
+
+    pg.display.update()
+
+    running = False
+
+
+
+root.mainloop()
     

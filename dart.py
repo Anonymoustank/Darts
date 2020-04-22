@@ -1,8 +1,4 @@
 import pygame as pg
-from tkinter import *
-from tkinter.simpledialog import askstring
-
-root = Tk()
 
 WIDTH = 1000
 
@@ -18,31 +14,31 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 
 pg.display.set_caption("Darts!")
 
-root.title("Points Scored")
-
-root.geometry("500x500")
-
-root.withdraw()
-
 BLACK = (0, 0, 0)
+
+WHITE = (255, 255, 255)
 
 pg.display.update()
 
 clock = pg.time.Clock()
 
+myfont = pg.font.SysFont('Arial', 45)
+
 running = True
 
 def give_points(points):
 
-    root.deiconify()
-
     turns += 1
 
-    scored = Label(root, text="You scored " + str(points) + " points.")
+    scored = myfont.render(str(points) + " Points", True, (WHITE))
 
-    if 501-points <= 0:
-        
-        points_left = Label(root, "You have won in " + str(turns) + " turns!")
+    screen.blit(scored, (0,0))
+
+    if turns == 8:
+        screen.fill(BLACK)
+        end = myfont.render("Game Over", True, (WHITE))
+        screen.blit(end, (750,750))
+        running = False
         
     else:
         

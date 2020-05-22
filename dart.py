@@ -1,8 +1,18 @@
 import pygame as pg
 
+#red has y-coordinates from 161 to 230, both inclusive
+#red has x-coordinates from 152 to 224, both inclusive
+
+#black has y-coordinates from 184 to 207, both inclusive
+#black has x-coordinates from 175 to 198, both inclusive
+
 import time
 
 size = 10 #ball size
+
+dot_x = 187
+
+dot_y = 195
 
 dart_num = 1 #number used in dart name
 
@@ -36,7 +46,9 @@ myfont = pg.font.SysFont('Arial', 45)
 
 running = True
 
-def give_points(points):
+def give_points():
+
+    global turns
 
     turns += 1
 
@@ -44,23 +56,58 @@ def give_points(points):
 
     screen.blit(scored, (0,0))
 
-    if turns == 8:
-        screen.fill(BLACK)
+    if turns == 2:
         scored = myfont.render(str(points) + " Points", True, (WHITE))
         screen.blit(scored, (0,0))
-        end = myfont.render("Game Over", True, (WHITE))
-        screen.blit(end, (750,750))
         pg.display.update()
+        time.sleep(3)
         running = False
 
-board = pg.image.load("Dart Board.png")
+dict = {} #stores all darts created
 
-board = pg.transform.scale(board, (750,750))
+def update_board():
+    global board
+    board = pg.image.load("Dart Board.png")
 
-screen.blit(board, (-100, -140)) #load and display the board
-        
+    board = pg.transform.scale(board, (750,750))
+
+    screen.blit(board, (-100, -140)) #load and display the board
+
+    if len(dict) != 0:
+        for dart_name in dict:
+            exec('dart_name = pg.image.load("Dart.png")', globals())
+            exec('dart_name = pg.transform.scale(dart_name, (30, 30))')
+            exec('screen.blit(dart_name, dict[dart_name])')
+    
+    pg.display.update()
+
+update_board()
+
+def dot_move():
+    screen.blit(dot, (dot_x, dot_y))
+    update_board()
+    pg.display.update()
+
+dart_1 = pg.image.load("Dart.png")
+dart_1 = pg.transform.scale(dart_1, (30, 30))
+screen.blit(dart_1, (2000, 200))
+pg.display.update()
+
 
 while running == True:
+    keys = pg.key.get_pressed()
+    if keys[pg.K_w]:
+        dot_y -= 1
+        dot_move()
+    if keys[pg.K_s]:
+        dot_y += 1
+        dot_move()
+    if keys[pg.K_d]:
+        dot_x += 1
+        dot_move()
+    if keys[pg.K_a]:
+        dot_x -= 1
+        dot_move()
 
     ev = pg.event.get()
 
@@ -68,25 +115,32 @@ while running == True:
         if event.type == pg.QUIT: #when the x button is clicked, the game stops running
             running = False
         if event.type == pg.MOUSEBUTTONUP: #handle click
-            pos = pg.mouse.get_pos()
-            print(pos)
-            x, y = pg.mouse.get_pos()
+            dict = {}
+            if dart_num > 1:
+                exec('dart_name = None')
+            else:
+                exec('dart_1 = None')
+            x = dot_x
+            y = dot_y
             dart_name = "dart" + str(dart_num)
             exec('dart_name = pg.image.load("Dart.png")')
             exec('dart_name = pg.transform.scale(dart_name, (30, 30))')
-            exec('screen.blit(dart_name, (x, y - 30))') #make dart go to y coordinate of mouse minus 30, so it lines up with the cursor
+            exec('screen.blit(dart_name, (x + 5, y - 25))') #make dart go to y coordinate of mouse minus 30, so it lines up with the cursor
+            exec('dict[dart_name] = x+5, y-25')
             pg.display.update()
             dart_num += 1
-
-    clock.tick(FPS)
+            print(dot_x, dot_y)
+            #give_points()
 
     dot = pg.image.load("dot.png")
 
     dot = pg.transform.scale(dot, (10, 10))
 
-    screen.blit(dot, (187,195)) #load and display the dot
+    screen.blit(dot, (dot_x,dot_y)) #load and display the dot
 
     pg.display.update()
+
+    clock.tick(FPS)
 
 pg.display.quit()
 pg.quit()

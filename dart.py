@@ -60,7 +60,6 @@ def give_points():
         scored = myfont.render(str(points) + " Points", True, (WHITE))
         screen.blit(scored, (0,0))
         pg.display.update()
-        time.sleep(3)
         running = False
 
 dict = {} #stores all darts created
@@ -129,8 +128,11 @@ while running == True:
             exec('dict[dart_name] = x+5, y-25')
             pg.display.update()
             dart_num += 1
-            print(dot_x, dot_y)
-            #give_points()
+            if dot_y >= 184 and dot_y <= 207 and dot_x >=175 and dot_x <= 198:
+                points += 50
+            elif 230 >= dot_y >= 161 and 224 >= dot_x >= 152:
+                points += 25
+            give_points()
 
     dot = pg.image.load("dot.png")
 

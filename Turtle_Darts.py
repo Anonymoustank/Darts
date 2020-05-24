@@ -2,7 +2,7 @@ import turtle #adapted from https://touey456.wordpress.com/2017/02/28/python-tur
 
 from random import randint, choice, uniform
 
-count = 15
+count = 3
 
 x_list = [-69, -198, 63, 192]
 
@@ -76,8 +76,10 @@ class Main():
         self.y = event.y
     def run(self):
         while True:
-            if count <= 0:
+            if count < 0:
                 self.t.hideturtle()
+                if dart_num != 1:
+                    exec("dart%s.hideturtle()" % str(dart_num))
                 sys.exit()
             self.t.setposition(self.x-275, (self.y*-1)+240) #needed because turtle and screen are referring to different positions
     def enemy_run(self):
@@ -87,6 +89,9 @@ class Main():
                 self.enemy.hideturtle()
                 self.author.clear()
                 self.author.write("0", font=("Arial", 16, "normal"))
+                self.author.clear()
+                self.author.goto(-40, -10)
+                self.author.write("Score: %s" % str(dart_num - 1), font=("Arial", 16, "normal"))
                 sys.exit()
             self.enemy.setposition(choice(x_list), choice(y_list))
             self.enemy.showturtle()

@@ -2,6 +2,10 @@ import turtle #adapted from https://touey456.wordpress.com/2017/02/28/python-tur
 
 from random import randint
 
+count = 2
+
+import sys
+
 import time
 
 dart_num = 1
@@ -9,14 +13,15 @@ dart_num = 1
 from threading import Thread
 
 def make_dart(x, y):
-    if abs(m.enemy.xcor() - x) <= 50 and abs(m.enemy.ycor() - y) <= 50:
-        print("Dead")
-    exec("dart%s = turtle.Turtle()" % dart_num)
-    exec("dart%s.hideturtle()" % dart_num)
-    exec("dart%s.shape('dart2.gif')" % dart_num)
-    exec("dart%s.penup()" % dart_num)
-    exec("dart%s.goto(x + 20, y + 20)" % dart_num) #needed because image position doesn't refer to the tip of the dart
-    exec("dart%s.showturtle()" % dart_num)
+    if count > 0:
+        if abs(m.enemy.xcor() - x) <= 50 and abs(m.enemy.ycor() - y) <= 50:
+            print("Dead")
+        exec("dart%s = turtle.Turtle()" % dart_num)
+        exec("dart%s.hideturtle()" % dart_num)
+        exec("dart%s.shape('dart2.gif')" % dart_num)
+        exec("dart%s.penup()" % dart_num)
+        exec("dart%s.goto(x + 20, y + 20)" % dart_num) #needed because image position doesn't refer to the tip of the dart
+        exec("dart%s.showturtle()" % dart_num)
 
 class Main():
     def __init__(self):
@@ -52,13 +57,22 @@ class Main():
         self.y = event.y
     def run(self):
         while True:
+            if count == 0:
+                sys.exit()
             self.t.setposition(self.x-275, (self.y*-1)+290) #needed because turtle and screen are referring to different positions
     def enemy_run(self):
         while True:
+            global count
+            if count == 0:
+                sys.exit()
+            count -= 1
             self.enemy.setposition(100, 100)
             time.sleep(1)
     def dart_click(self):
-        turtle.onscreenclick(make_dart)
+        if count < 1:
+            sys.exit()
+        else:
+            turtle.onscreenclick(make_dart)
             
 m = Main()
 

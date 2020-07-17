@@ -3,6 +3,7 @@ import turtle #adapted from https://touey456.wordpress.com/2017/02/28/python-tur
 #you have to 15 seconds to hit the red dot that randomly pops up in the middle of each box
 #if you hit the red dot, you will receive 2 extra seconds
 #if you hit the center of the red dot, you will receive 3 extra seconds
+#Extra point if you hit the exact center of the red dot
 
 from random import randint, choice, uniform
 
@@ -23,6 +24,7 @@ count = 15
 dart_num = 1
 
 dart_list = []
+current_time = time.perf_counter()
 
 def make_dart(x, y):
     global dart_num
@@ -112,7 +114,7 @@ class Main():
             self.t.setposition(self.x-275, (self.y*-1)+240) #needed because turtle and screen are referring to different positions
     def enemy_run(self):
         while True:
-            global count
+            global count, current_time
             if count <= 0:
                 self.enemy.hideturtle()
                 self.author.clear()
@@ -121,18 +123,16 @@ class Main():
                 self.author.goto(-40, -10)
                 self.author.write("Score: %s" % str(hit), font=("Arial", 16, "normal"))
                 sys.exit()
-            self.enemy.setposition(choice(x_list), choice(y_list))
-            self.enemy.showturtle()
-            time.sleep(0.65)
-            self.author.clear()
-            self.author.write(str(count - 1), font=("Arial", 16, "normal"))
-            count -= 1
-            self.enemy.hideturtle()
-            self.enemy.setposition(1000, 0)
-            time.sleep(0.65)
-            self.author.clear()
-            self.author.write(str(count - 1), font=("Arial", 16, "normal"))
-            count -= 1
+            if abs(current_time - time.perf_counter()) >= 1:
+                self.author.clear()
+                self.author.write(str(count - 1), font=("Arial", 16, "normal"))
+                self.enemy.setposition(choice(x_list), choice(y_list))
+                self.enemy.showturtle()
+                count -= 1
+                current_time = time.perf_counter()
+            if abs(current_time - time.perf_counter()) >= 1:
+                self.enemy.hideturtle()
+                self.enemy.setposition(1000, 0)
     def dart_click(self):
         global count
         if count < 1:
